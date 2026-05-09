@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path'); // ⬅️ AJOUT
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -62,6 +63,9 @@ if (process.env.NODE_ENV !== 'test') {
 
 // Middleware de base
 app.use(express.json({ limit: '10mb' })); // limite la taille du body
+
+// Desserte des fichiers uploadés (photos de profil)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // ⬅️ AJOUT
 
 // Appliquer les limiters spécifiques
 app.use('/api/auth', authLimiter);

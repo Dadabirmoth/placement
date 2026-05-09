@@ -32,6 +32,10 @@ const Profile = sequelize.define('Profile', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  photo: {
+  type: DataTypes.STRING,
+  allowNull: true,
+},
 });
 
 // Associations

@@ -1,3 +1,5 @@
+const path = require('path'); // ⬅️ AJOUT
+
 require('dotenv').config(); // Optionnel, mais inoffensif
 
 const request = require('supertest');
@@ -38,18 +40,18 @@ describe('Profils domestiques', () => {
     await sequelize.close();
   });
 
-  it('devrait créer un profil pour un domestique', async () => {
+  it('devrait créer un profil avec photo', async () => {
     const res = await request(app)
       .post('/api/profiles')
       .set('Authorization', `Bearer ${token}`)
-      .send({
-        dateNaissance: '1990-05-15',
-        lieuNaissance: 'Abidjan',
-        telephone: '0102030405',
-        adresse: 'Cocody, Rue 12',
-        numeroCNI: 'CI123456789',
-      });
+      .field('dateNaissance', '1990-05-15')
+      .field('lieuNaissance', 'Abidjan')
+      .field('telephone', '0102030405')
+      .field('adresse', 'Cocody, Rue 12')
+      .field('numeroCNI', 'CI123456789')
+      .attach('photo', path.join(__dirname, 'fixtures', 'photo-test.jpg'));
     expect(res.statusCode).toEqual(201);
+    expect(res.body.photo).toMatch(/^\/uploads\//);
     expect(res.body).toHaveProperty('dateNaissance');
   });
 

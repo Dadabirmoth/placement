@@ -1,27 +1,29 @@
 const { validationResult } = require('express-validator');
 const Profile = require('../models/Profile');
 const User = require('../models/User');
-const Review = require('../models/Review'); // ⬅️ IMPORT AJOUTÉ
+const Review = require('../models/Review');
 
-// Créer le profil du domestique connecté
 const createProfile = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  // Vérifier que l'utilisateur est bien un domestique
   if (req.user.role !== 'domestic') {
     return res.status(403).json({ message: 'Seul un domestique peut créer un profil.' });
   }
 
-  // Vérifier qu'il n'a pas déjà un profil
   const existing = await Profile.findOne({ where: { userId: req.user.id } });
   if (existing) {
     return res.status(400).json({ message: 'Vous avez déjà un profil.' });
   }
 
   const { dateNaissance, lieuNaissance, telephone, adresse, numeroCNI } = req.body;
+
+  let photoPath = null;
+  if (req.file) {
+    photoPath = '/uploads/' + req.file.filename;
+  }
 
   try {
     const profile = await Profile.create({
@@ -31,6 +33,7 @@ const createProfile = async (req, res) => {
       telephone,
       adresse,
       numeroCNI,
+      photo: photoPath,
     });
 
     res.status(201).json(profile);
@@ -40,7 +43,6 @@ const createProfile = async (req, res) => {
   }
 };
 
-// Obtenir son propre profil
 const getMyProfile = async (req, res) => {
   try {
     const profile = await Profile.findOne({
@@ -57,7 +59,6 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-// Mettre à jour son profil
 const updateProfile = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -71,6 +72,11 @@ const updateProfile = async (req, res) => {
     }
 
     const { dateNaissance, lieuNaissance, telephone, adresse, numeroCNI } = req.body;
+
+    if (req.file) {
+      profile.photo = '/uploads/' + req.file.filename;
+    }
+
     await profile.update({
       dateNaissance: dateNaissance || profile.dateNaissance,
       lieuNaissance: lieuNaissance || profile.lieuNaissance,
@@ -86,7 +92,6 @@ const updateProfile = async (req, res) => {
   }
 };
 
-// Voir le profil public d'un domestique (sans token) - avec statistiques
 const getPublicProfile = async (req, res) => {
   try {
     const profile = await Profile.findByPk(req.params.id, {
@@ -96,7 +101,6 @@ const getPublicProfile = async (req, res) => {
       return res.status(404).json({ message: 'Profil non trouvé.' });
     }
 
-    // Récupérer les statistiques des avis
     const reviews = await Review.findAll({
       where: { domesticId: profile.userId },
     });

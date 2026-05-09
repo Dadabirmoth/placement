@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
 const { protect } = require('../middleware/auth');
+const upload = require('../middleware/upload'); // ⬅️ IMPORT AJOUTÉ
 const {
   createProfile,
   getMyProfile,
@@ -28,9 +29,9 @@ const profileUpdateValidation = [
 ];
 
 // Routes
-router.post('/', protect, profileValidation, createProfile);
+router.post('/', protect, upload.single('photo'), profileValidation, createProfile);
 router.get('/me', protect, getMyProfile);
-router.put('/me', protect, profileUpdateValidation, updateProfile); // ← utilise la validation souple
+router.put('/me', protect, upload.single('photo'), profileUpdateValidation, updateProfile);
 router.get('/:id', getPublicProfile);
 
 module.exports = router;
