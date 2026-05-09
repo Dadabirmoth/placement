@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const Profile = require('../models/Profile');
 const User = require('../models/User');
+const Review = require('../models/Review'); // ⬅️ IMPORT AJOUTÉ
 
 // Créer le profil du domestique connecté
 const createProfile = async (req, res) => {
@@ -85,7 +86,7 @@ const updateProfile = async (req, res) => {
   }
 };
 
-// Voir le profil public d'un domestique (sans token)
+// Voir le profil public d'un domestique (sans token) - avec statistiques
 const getPublicProfile = async (req, res) => {
   try {
     const profile = await Profile.findByPk(req.params.id, {
@@ -94,7 +95,25 @@ const getPublicProfile = async (req, res) => {
     if (!profile) {
       return res.status(404).json({ message: 'Profil non trouvé.' });
     }
-    res.json(profile);
+
+    // Récupérer les statistiques des avis
+    const reviews = await Review.findAll({
+      where: { domesticId: profile.userId },
+    });
+
+    const totalReviews = reviews.length;
+    const averageRating =
+      totalReviews > 0
+        ? Math.round(
+            (reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews) * 10
+          ) / 10
+        : 0;
+
+    res.json({
+      ...profile.toJSON(),
+      totalReviews,
+      averageRating,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Erreur serveur' });

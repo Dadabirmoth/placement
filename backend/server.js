@@ -2,13 +2,15 @@ require('dotenv').config();
 const express = require('express');
 const sequelize = require('./config/database');
 
-// Importer les routes
-const authRoutes = require('./routes/authRoutes');
-const profileRoutes = require('./routes/profileRoutes'); // ⬅️ AJOUT OBLIGATOIRE
-
-// Importer les modèles pour que Sequelize les enregistre
+// Modèles (pour la synchronisation)
 const User = require('./models/User');
 const Profile = require('./models/Profile');
+const Review = require('./models/Review');
+
+// Routes
+const authRoutes = require('./routes/authRoutes');
+const profileRoutes = require('./routes/profileRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 const app = express();
 
@@ -18,8 +20,8 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);
+app.use('/api/reviews', reviewRoutes);
 
-// Test
 app.get('/', (req, res) => {
   res.send('Backend opérationnel');
 });
