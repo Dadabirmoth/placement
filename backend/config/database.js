@@ -1,8 +1,10 @@
+require('dotenv').config(); // Charge les variables d'environnement immédiatement
+
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
-  logging: false, // passer à console.log pour voir les requêtes SQL
+  logging: false,
 });
 
 module.exports = sequelize;

@@ -1,7 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const sequelize = require('./config/database');
+
+// Importer les routes
 const authRoutes = require('./routes/authRoutes');
+const profileRoutes = require('./routes/profileRoutes'); // ⬅️ AJOUT OBLIGATOIRE
+
+// Importer les modèles pour que Sequelize les enregistre
+const User = require('./models/User');
+const Profile = require('./models/Profile');
 
 const app = express();
 
@@ -10,8 +17,9 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/profiles', profileRoutes);
 
-// Pour tester
+// Test
 app.get('/', (req, res) => {
   res.send('Backend opérationnel');
 });
@@ -22,7 +30,6 @@ sequelize
   .authenticate()
   .then(() => {
     console.log('Connexion à PostgreSQL réussie.');
-    // Synchroniser les modèles (crée les tables si elles n'existent pas)
     return sequelize.sync();
   })
   .then(() => {
