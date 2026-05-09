@@ -1,0 +1,138 @@
+export interface Domestic {
+  id: string;
+  name: string;
+  role: string;
+  category: string; // "cuisine", "enfants", "menage", etc.
+  location: string;
+  rating: number;
+  reviews: number;
+  missions: number;
+  price: number; // FCFA par heure
+  verified: boolean;
+  available: boolean;
+  avatar: string;
+  initials: string;
+}
+
+export const domesticsData: Domestic[] = [
+  {
+    id: "1",
+    name: "Marie Kouassi",
+    role: "Nounou / Gouvernante",
+    category: "enfants",
+    location: "Cocody, Angré",
+    rating: 4.9,
+    reviews: 128,
+    missions: 12,
+    price: 2500,
+    verified: true,
+    available: true,
+    avatar: "/avatars/marie.jpg",
+    initials: "MK",
+  },
+  {
+    id: "2",
+    name: "Jean-Paul Koffi",
+    role: "Cuisinier Professionnel",
+    category: "cuisine",
+    location: "Plateau",
+    rating: 4.8,
+    reviews: 94,
+    missions: 25,
+    price: 3000,
+    verified: true,
+    available: false,
+    avatar: "/avatars/jeanpaul.jpg",
+    initials: "JK",
+  },
+  {
+    id: "3",
+    name: "Awa Bakayoko",
+    role: "Aide Ménagère",
+    category: "menage",
+    location: "Marcory, Zone 4",
+    rating: 5.0,
+    reviews: 32,
+    missions: 8,
+    price: 2000,
+    verified: true,
+    available: true,
+    avatar: "/avatars/awa.jpg",
+    initials: "AB",
+  },
+  {
+    id: "4",
+    name: "Marc Konan",
+    role: "Chauffeur Privé",
+    category: "chauffeur",
+    location: "Riviera",
+    rating: 4.7,
+    reviews: 215,
+    missions: 42,
+    price: 4000,
+    verified: true,
+    available: true,
+    avatar: "/avatars/marc.jpg",
+    initials: "MK",
+  },
+  {
+    id: "5",
+    name: "Grace N'Guessan",
+    role: "Laveuse / Repasseuse",
+    category: "menage",
+    location: "Bingerville",
+    rating: 4.6,
+    reviews: 17,
+    missions: 5,
+    price: 1800,
+    verified: true,
+    available: false,
+    avatar: "/avatars/grace.jpg",
+    initials: "GN",
+  },
+  {
+    id: "6",
+    name: "Koffi Brou",
+    role: "Cuisinier",
+    category: "cuisine",
+    location: "Yopougon",
+    rating: 4.9,
+    reviews: 53,
+    missions: 18,
+    price: 3500,
+    verified: true,
+    available: true,
+    avatar: "/avatars/koffi.jpg",
+    initials: "KB",
+  },
+  {
+    id: "7",
+    name: "Fatou Diop",
+    role: "Nounou",
+    category: "enfants",
+    location: "Cocody",
+    rating: 4.8,
+    reviews: 88,
+    missions: 22,
+    price: 2200,
+    verified: true,
+    available: true,
+    avatar: "/avatars/fatou.jpg",
+    initials: "FD",
+  },
+  {
+    id: "8",
+    name: "Jean-Marc Traoré",
+    role: "Garde d'enfants & Sécurité",
+    category: "enfants",
+    location: "Plateau",
+    rating: 4.8,
+    reviews: 94,
+    missions: 30,
+    price: 3000,
+    verified: true,
+    available: true,
+    avatar: "/avatars/jeanmarc.jpg",
+    initials: "JT",
+  },
+];
