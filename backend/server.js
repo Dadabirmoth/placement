@@ -11,6 +11,7 @@ const Review = require('./models/Review');
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const adminRoutes = require('./routes/adminRoutes'); // ⬅️ AJOUT
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/admin', adminRoutes); // ⬅️ AJOUT
 
 app.get('/', (req, res) => {
   res.send('Backend opérationnel');
