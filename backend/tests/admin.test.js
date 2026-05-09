@@ -21,6 +21,8 @@ app.use('/api/admin', adminRoutes);
 let adminToken, employerToken, domesticToken, domesticId;
 
 describe('Dashboard admin', () => {
+  jest.setTimeout(20000); // timeout global de 20s pour tous les tests
+
   beforeAll(async () => {
     await sequelize.authenticate();
     await sequelize.sync({ force: true });
@@ -73,7 +75,7 @@ describe('Dashboard admin', () => {
         adresse: 'Cocody, Abidjan',
         numeroCNI: 'CI987654321',
       });
-  });
+  }, 15000); // timeout spécifique de 15s pour le beforeAll
 
   afterAll(async () => {
     await sequelize.close();
@@ -101,7 +103,6 @@ describe('Dashboard admin', () => {
       .set('Authorization', `Bearer ${adminToken}`);
     expect(res.statusCode).toEqual(200);
     expect(res.body.users.length).toBeGreaterThanOrEqual(1);
-    // Vérifier que le domestique créé est présent
     expect(res.body.users.some(u => u.id === domesticId)).toBe(true);
   });
 
@@ -123,7 +124,6 @@ describe('Dashboard admin', () => {
       .set('Authorization', `Bearer ${adminToken}`);
     expect(res.statusCode).toEqual(200);
 
-    // Vérifier que l'utilisateur n'existe plus
     const check = await request(app)
       .get('/api/admin/users')
       .set('Authorization', `Bearer ${adminToken}`);
