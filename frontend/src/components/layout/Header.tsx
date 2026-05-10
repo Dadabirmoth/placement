@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, ShieldCheck, User } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { MobileMenu } from "./MobileMenu";
 import { useState } from "react";
@@ -18,7 +17,23 @@ const navigation = [
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // ⚡️ État initial directement depuis localStorage (pas d'effet)
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    if (typeof window !== "undefined") {
+      return !!localStorage.getItem("token");
+    }
+    return false;
+  });
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    router.push("/");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 shadow-sm">
@@ -54,18 +69,35 @@ export function Header() {
         {/* Actions desktop */}
         <div className="hidden md:flex items-center gap-3">
           <ModeToggle />
-          <Link
-            href="/connexion"
-            className={buttonVariants({ variant: "outline", size: "sm" })}
-          >
-            Connexion
-          </Link>
-          <Link
-            href="/inscription"
-            className={buttonVariants({ variant: "default", size: "sm" })}
-          >
-            S&apos;inscrire
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href="/tableau-de-bord"
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
+              >
+                <User className="h-4 w-4 mr-2" />
+                Mon compte
+              </Link>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                Déconnexion
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/connexion"
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
+                Connexion
+              </Link>
+              <Link
+                href="/inscription"
+                className={buttonVariants({ variant: "default", size: "sm" })}
+              >
+                S&apos;inscrire
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile */}
@@ -81,7 +113,15 @@ export function Header() {
         </div>
       </div>
 
-      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileMenu
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        isLoggedIn={isLoggedIn}
+        onLogout={() => {
+          handleLogout();
+          setMobileOpen(false);
+        }}
+      />
     </header>
   );
 }

@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X } from "lucide-react"; // inutile maintenant mais peut rester si utilisé ailleurs
-import { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -22,9 +20,11 @@ const navigation = [
 interface MobileMenuProps {
   open: boolean;
   onClose: () => void;
+  isLoggedIn: boolean;
+  onLogout: () => void;
 }
 
-export function MobileMenu({ open, onClose }: MobileMenuProps) {
+export function MobileMenu({ open, onClose, isLoggedIn, onLogout }: MobileMenuProps) {
   const pathname = usePathname();
 
   return (
@@ -43,9 +43,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
               href={item.href}
               onClick={onClose}
               className={`text-lg font-medium transition-colors hover:text-primary ${
-                pathname === item.href
-                  ? "text-primary"
-                  : "text-muted-foreground"
+                pathname === item.href ? "text-primary" : "text-muted-foreground"
               }`}
             >
               {item.name}
@@ -54,20 +52,37 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
         </nav>
 
         <div className="mt-8 flex flex-col gap-3">
-          <Link
-            href="/connexion"
-            className={buttonVariants({ variant: "outline" })}
-            onClick={onClose}
-          >
-            Connexion
-          </Link>
-          <Link
-            href="/inscription"
-            className={buttonVariants({ variant: "default" })}
-            onClick={onClose}
-          >
-            S&apos;inscrire
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href="/tableau-de-bord"
+                className={buttonVariants({ variant: "default", className: "w-full" })}
+                onClick={onClose}
+              >
+                Mon compte
+              </Link>
+              <Button variant="outline" className="w-full" onClick={() => { onLogout(); onClose(); }}>
+                Déconnexion
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/connexion"
+                className={buttonVariants({ variant: "outline", className: "w-full" })}
+                onClick={onClose}
+              >
+                Connexion
+              </Link>
+              <Link
+                href="/inscription"
+                className={buttonVariants({ variant: "default", className: "w-full" })}
+                onClick={onClose}
+              >
+                S&apos;inscrire
+              </Link>
+            </>
+          )}
         </div>
       </SheetContent>
     </Sheet>
