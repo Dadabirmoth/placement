@@ -12,7 +12,7 @@ import api, { setToken } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,10 +23,9 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await api.post("/api/auth/login", { email, password });
+      const res = await api.post("/api/auth/login", { telephone, password });
       setToken(res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data));
-      // Rediriger selon le rôle (optionnel)
       if (res.data.role === "admin") {
         router.push("/admin/dashboard");
       } else if (res.data.role === "domestic") {
@@ -57,10 +56,10 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="tel"
+                placeholder="Numéro de téléphone"
+                value={telephone}
+                onChange={(e) => setTelephone(e.target.value)}
                 required
               />
             </div>

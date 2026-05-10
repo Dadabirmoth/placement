@@ -7,18 +7,19 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label"; // Assurez-vous de l'avoir (à ajouter si besoin)
+import { Label } from "@/components/ui/label";
 import { ShieldCheck } from "lucide-react";
 import api, { setToken } from "@/lib/api";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [step, setStep] = useState(1); // étape 1 : choix du rôle ; étape 2 : formulaire
+  const [step, setStep] = useState(1);
   const [role, setRole] = useState<"domestic" | "employer">("domestic");
   const [form, setForm] = useState({
     nom: "",
     prenom: "",
-    email: "",
+    telephone: "",      // obligatoire
+    email: "",           // optionnel
     password: "",
   });
   const [error, setError] = useState("");
@@ -32,10 +33,11 @@ export default function RegisterPage() {
       const res = await api.post("/api/auth/register", {
         ...form,
         role,
+        // Si email est vide, on l'envoie comme null (backend s'attend à null)
+        email: form.email.trim() || null,
       });
       setToken(res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data));
-      // Rediriger vers la page appropriée (tableau de bord domestique ou employeur)
       router.push("/tableau-de-bord");
     } catch (err: any) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription");
@@ -99,14 +101,24 @@ export default function RegisterPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="telephone">Numéro de téléphone</Label>
+                <Input
+                  id="telephone"
+                  type="tel"
+                  placeholder="+225 01 02 03 04 05"
+                  value={form.telephone}
+                  onChange={(e) => setForm({ ...form, telephone: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="email">Email (optionnel)</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="exemple@email.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  required
                 />
               </div>
               <div>

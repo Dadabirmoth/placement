@@ -20,18 +20,27 @@ export function Header() {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // ⚡️ État initial directement depuis localStorage (pas d'effet)
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  // État d'authentification initialisé directement (pas d'effet)
+  const [auth, setAuth] = useState(() => {
     if (typeof window !== "undefined") {
-      return !!localStorage.getItem("token");
+      const token = localStorage.getItem("token");
+      const userStr = localStorage.getItem("user");
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          return { isLoggedIn: true, userRole: user.role };
+        } catch {
+          // JSON invalide, on ignore
+        }
+      }
     }
-    return false;
+    return { isLoggedIn: false, userRole: null };
   });
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setIsLoggedIn(false);
+    setAuth({ isLoggedIn: false, userRole: null });
     router.push("/");
   };
 
@@ -69,10 +78,14 @@ export function Header() {
         {/* Actions desktop */}
         <div className="hidden md:flex items-center gap-3">
           <ModeToggle />
-          {isLoggedIn ? (
+          {auth.isLoggedIn ? (
             <>
               <Link
-                href="/tableau-de-bord"
+                href={
+                  auth.userRole
+                    ? `/tableau-de-bord/${auth.userRole}`
+                    : "/tableau-de-bord"
+                }
                 className={buttonVariants({ variant: "ghost", size: "sm" })}
               >
                 <User className="h-4 w-4 mr-2" />
@@ -116,7 +129,7 @@ export function Header() {
       <MobileMenu
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
-        isLoggedIn={isLoggedIn}
+        isLoggedIn={auth.isLoggedIn}
         onLogout={() => {
           handleLogout();
           setMobileOpen(false);
