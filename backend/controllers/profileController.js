@@ -92,6 +92,40 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// Récupérer tous les profils publics (avec infos utilisateur et stats)
+const getAllProfiles = async (req, res) => {
+  try {
+    const profiles = await Profile.findAll({
+      include: { model: User, attributes: ['nom', 'prenom', 'telephone'] },
+    });
+
+    const result = await Promise.all(
+      profiles.map(async (profile) => {
+        const reviews = await Review.findAll({
+          where: { domesticId: profile.userId },
+        });
+        const totalReviews = reviews.length;
+        const averageRating =
+          totalReviews > 0
+            ? Math.round(
+                (reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews) * 10
+              ) / 10
+            : 0;
+        return {
+          ...profile.toJSON(),
+          totalReviews,
+          averageRating,
+        };
+      })
+    );
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
+// Voir le profil public d'un domestique (sans token) - avec statistiques
 const getPublicProfile = async (req, res) => {
   try {
     const profile = await Profile.findByPk(req.params.id, {
@@ -124,4 +158,10 @@ const getPublicProfile = async (req, res) => {
   }
 };
 
-module.exports = { createProfile, getMyProfile, updateProfile, getPublicProfile };
+module.exports = {
+  createProfile,
+  getMyProfile,
+  updateProfile,
+  getAllProfiles,
+  getPublicProfile,
+};

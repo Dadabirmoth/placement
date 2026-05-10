@@ -38,7 +38,7 @@ export default function LegalPage() {
 
       <Separator className="my-10" />
 
-      <section className="space-y-6">
+      <section className="space-y-6" id="confidentialite">
         <h2 className="text-2xl font-semibold">Politique de Confidentialité</h2>
         <h3 className="text-lg font-medium">Collecte de données</h3>
         <p className="text-sm text-muted-foreground">
@@ -62,15 +62,14 @@ export default function LegalPage() {
 
       <Separator className="my-10" />
 
-      <section className="space-y-6">
+      {/* Section avec ancre pour le footer */}
+      <section className="space-y-6" id="cookies">
         <h2 className="text-2xl font-semibold">Gestion des Cookies</h2>
         <p className="text-sm text-muted-foreground">
           Nous utilisons des cookies pour améliorer votre expérience de navigation
           et analyser notre trafic sur la plateforme Sérénité. Vous pouvez
           personnaliser vos préférences ci-dessous.
         </p>
-        {/* Le bandeau réel de cookies sera géré dans le layout.
-            Ici nous affichons des explications statiques. */}
         <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
           <li><strong>Cookies essentiels :</strong> nécessaires au fonctionnement du site.</li>
           <li><strong>Cookies analytiques :</strong> nous aident à comprendre l&apos;usage du site.</li>

@@ -1,7 +1,8 @@
 "use client";
 
-import { notFound } from "next/navigation";
-import { sampleProfile } from "@/data/profile";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import api from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,70 +17,78 @@ import {
   Circle,
   Mail,
   Phone,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 
-export default function ProfilePage({ params }: { params: { id: string } }) {
-  const profile = sampleProfile; // pour la démo
+export default function ProfilePage() {
+  const params = useParams();
+  const id = params.id as string;
+  const [profileData, setProfileData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!profile) {
-    notFound();
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await api.get(`/api/profiles/${id}`);
+        setProfileData(res.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) fetch();
+  }, [id]);
+
+  // Spinner de chargement
+  if (loading) {
+    return (
+      <div className="flex justify-center mt-20">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
+
+  if (!profileData) {
+    return <p className="text-center mt-20">Profil introuvable</p>;
+  }
+
+  const { ...profile } = profileData;
+  const user = profile.User;
+  const totalReviews = profile.totalReviews || 0;
+  const averageRating = profile.averageRating || 0;
 
   return (
     <div className="container mx-auto px-4 py-10 space-y-10 animate-fade-in">
-      {/* Fil d'ariane */}
+      {/* fil d'ariane */}
       <div className="text-sm text-muted-foreground flex gap-1">
-        <Link href="/" className="hover:text-primary">
-          Accueil
-        </Link>
-        <span>/</span>
-        <Link href="/domestiques" className="hover:text-primary">
-          Domestiques
-        </Link>
-        <span>/</span>
-        <span className="text-foreground">{profile.name}</span>
+        <Link href="/" className="hover:text-primary">Accueil</Link><span>/</span>
+        <Link href="/domestiques" className="hover:text-primary">Domestiques</Link><span>/</span>
+        <span className="text-foreground">{user.nom} {user.prenom}</span>
       </div>
 
-      {/* HEADER PROFILE */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Colonne gauche : photo et badges */}
+        {/* Colonne gauche : photo et badge */}
         <div className="lg:col-span-1 space-y-6">
           <div className="relative">
-            {/* Photo en rectangle arrondi (plus d'Avatar) */}
             <div className="w-full aspect-square rounded-2xl border-4 border-primary/20 shadow-lg overflow-hidden bg-muted">
               <img
-                src={profile.photo}
-                alt={profile.name}
+                src={profile.photo || "/placeholder.jpg"}
+                alt={`${user.nom} ${user.prenom}`}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const parent = e.currentTarget.parentElement!;
-                  parent.innerHTML = `<span class="text-6xl font-serif text-primary flex items-center justify-center w-full h-full">${profile.name.charAt(0)}</span>`;
-                }}
               />
             </div>
-            <Badge
-              className="absolute top-4 right-4 flex items-center gap-1 text-sm"
-              variant={profile.available ? "default" : "outline"}
-            >
-              <Circle
-                className={`h-2 w-2 fill-current ${
-                  profile.available ? "text-green-500" : "text-muted-foreground"
-                }`}
-              />
-              {profile.available ? "Disponible" : "En mission"}
+            <Badge className="absolute top-4 right-4 flex items-center gap-1 text-sm">
+              <Circle className="h-2 w-2 fill-current text-green-500" /> Disponible
             </Badge>
           </div>
-
-          {/* Badge de confiance */}
           <Card className="bg-primary/5 border-primary/20">
             <CardContent className="p-4 flex items-center gap-3">
               <ShieldCheck className="h-8 w-8 text-primary" />
               <div>
                 <p className="font-semibold text-sm">Badge de Confiance Or</p>
-                <p className="text-xs text-muted-foreground">
-                  Identité vérifiée, casier judiciaire OK.
-                </p>
+                <p className="text-xs text-muted-foreground">Identité vérifiée, casier judiciaire OK.</p>
               </div>
             </CardContent>
           </Card>
@@ -89,82 +98,60 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-2 space-y-8">
           <div>
             <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
-              {profile.name}
+              {user.nom} {user.prenom}
             </h1>
             <p className="text-lg text-primary font-medium mt-1">
-              {profile.role}
+              {profile.adresse}
             </p>
             <div className="flex items-center gap-1 text-amber-500 mt-2">
               <Star className="h-5 w-5 fill-current" />
-              <span className="font-bold text-foreground">
-                {profile.rating}
-              </span>
+              <span className="font-bold text-foreground">{averageRating}</span>
               <span className="text-muted-foreground text-sm ml-2">
-                ({profile.reviewsCount} avis) · {profile.missions} missions
+                ({totalReviews} avis)
               </span>
             </div>
           </div>
 
-          {/* Détails rapides */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatItem icon={<MapPin />} label="Localisation" value="Cocody, Abidjan" />
-            <StatItem icon={<Briefcase />} label="Expérience" value={profile.experience} />
-            <StatItem icon={<Clock />} label="Âge" value={`${profile.age} ans`} />
-            <StatItem icon={<ShieldCheck />} label="CNI" value={profile.cni} />
+            <StatItem icon={<MapPin />} label="Localisation" value={profile.adresse} />
+            <StatItem icon={<Briefcase />} label="Expérience" value="-" />
+            <StatItem icon={<Clock />} label="Âge" value="-" />
+            <StatItem icon={<ShieldCheck />} label="CNI" value={profile.numeroCNI} />
           </div>
 
           <Separator />
-
-          {/* À propos */}
           <section>
             <h2 className="text-xl font-semibold mb-3">À propos</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              {profile.about}
-            </p>
+            <p className="text-muted-foreground">Aucune description fournie.</p>
           </section>
 
-          {/* Compétences */}
           <section>
             <h2 className="text-xl font-semibold mb-3">Compétences</h2>
             <div className="flex flex-wrap gap-2">
-              {profile.skills.map((skill) => (
-                <Badge
-                  key={skill}
-                  variant="secondary"
-                  className="px-3 py-1 text-sm"
-                >
-                  {skill}
-                </Badge>
-              ))}
+              <Badge variant="secondary" className="px-3 py-1">
+                Non spécifié
+              </Badge>
             </div>
           </section>
 
           <Separator />
-
-          {/* Boutons d'action */}
           <div className="flex flex-wrap gap-4">
             <Button size="lg" className="gap-2">
-              <Briefcase className="h-4 w-4" />
-              Embaucher {profile.name.split(" ")[0]}
+              <Briefcase className="h-4 w-4" /> Embaucher
             </Button>
             <Button variant="outline" size="lg" className="gap-2">
-              <Mail className="h-4 w-4" />
-              Contacter
+              <Mail className="h-4 w-4" /> Contacter
             </Button>
           </div>
 
-          {/* Avis */}
           <section>
-            <h2 className="text-xl font-semibold mb-4">
-              Avis des employeurs ({profile.reviews.length})
-            </h2>
-            <div className="space-y-4">
-              {profile.reviews.map((review) => (
-                <ReviewCard key={review.id} review={review} />
-              ))}
-            </div>
-            {profile.reviews.length === 0 && (
+            <h2 className="text-xl font-semibold mb-4">Avis ({totalReviews})</h2>
+            {totalReviews === 0 ? (
               <p className="text-muted-foreground">Aucun avis pour le moment.</p>
+            ) : (
+              <div className="space-y-4">
+                {/* Les avis réels seront intégrés plus tard */}
+              </div>
             )}
           </section>
         </div>
@@ -173,7 +160,6 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
   );
 }
 
-// Composant StatItem amélioré (optionnel, mais déjà présent)
 function StatItem({
   icon,
   label,

@@ -52,12 +52,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/confidentialite" className="hover:text-primary transition-colors">
+                <Link href="/conditions#confidentialite" className="hover:text-primary transition-colors">
                   Politique de confidentialité
                 </Link>
               </li>
               <li>
-                <Link href="/cookies" className="hover:text-primary transition-colors">
+                <Link href="/conditions#cookies" className="hover:text-primary transition-colors">
                   Gestion des cookies
                 </Link>
               </li>
@@ -93,7 +93,7 @@ export function Footer() {
             <Link href="/conditions" className="hover:text-primary">
               CGU
             </Link>
-            <Link href="/confidentialite" className="hover:text-primary">
+            <Link href="/conditions#confidentialite" className="hover:text-primary">
               Confidentialité
             </Link>
           </div>

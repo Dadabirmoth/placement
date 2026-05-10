@@ -18,17 +18,17 @@ export default function AboutPage() {
       {/* Mission & valeurs */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <ValueCard
-          icon={<ShieldCheck className="h-8 w-8 text-primary" />}
+          icon={<ShieldCheck className="h-8 w-8" />}
           title="Sécurité Absolue"
           description="Chaque candidat subit un processus de vérification rigoureux incluant le casier judiciaire et les références professionnelles."
         />
         <ValueCard
-          icon={<Heart className="h-8 w-8 text-primary" />}
+          icon={<Heart className="h-8 w-8" />}
           title="Dignité & Respect"
           description="Nous valorisons le travail domestique en garantissant des conditions justes et conformes à la législation ivoirienne."
         />
         <ValueCard
-          icon={<Award className="h-8 w-8 text-primary" />}
+          icon={<Award className="h-8 w-8" />}
           title="Excellence"
           description="Nos formations continues assurent que chaque domestique placé maîtrise les standards de service les plus élevés."
         />
@@ -48,7 +48,6 @@ export default function AboutPage() {
   );
 }
 
-// Petit composant réutilisable pour les cartes de valeurs
 function ValueCard({
   icon,
   title,
@@ -60,7 +59,7 @@ function ValueCard({
 }) {
   return (
     <div className="group bg-card border rounded-2xl p-6 text-center hover:shadow-lg hover:border-primary/30 transition-all duration-300">
-      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-foreground transition-colors">
         {icon}
       </div>
       <h3 className="font-semibold text-lg mb-2">{title}</h3>
