@@ -3,48 +3,43 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const User = require('../models/User');
 
-// Générer un token JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE || '30d',
   });
 };
 
-// Inscription
 const register = async (req, res) => {
-  // Vérifier les erreurs de validation
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { nom, prenom, email, password, role } = req.body;
+  const { nom, prenom, telephone, password, role, email } = req.body;
 
   try {
-    // Vérifier si l'utilisateur existe déjà
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = await User.findOne({ where: { telephone } });
     if (existingUser) {
-      return res.status(400).json({ message: 'Cet email est déjà utilisé.' });
+      return res.status(400).json({ message: 'Ce numéro de téléphone est déjà utilisé.' });
     }
 
-    // Hasher le mot de passe
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Créer l'utilisateur
     const user = await User.create({
       nom,
       prenom,
-      email,
+      telephone,
+      email: email || null,
       password: hashedPassword,
       role,
     });
 
-    // Renvoyer le token
     res.status(201).json({
       _id: user.id,
       nom: user.nom,
       prenom: user.prenom,
+      telephone: user.telephone,
       email: user.email,
       role: user.role,
       token: generateToken(user.id),
@@ -55,30 +50,30 @@ const register = async (req, res) => {
   }
 };
 
-// Connexion
 const login = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password } = req.body;
+  const { telephone, password } = req.body;
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { telephone } });
     if (!user) {
-      return res.status(401).json({ message: 'Email ou mot de passe incorrect.' });
+      return res.status(401).json({ message: 'Téléphone ou mot de passe incorrect.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Email ou mot de passe incorrect.' });
+      return res.status(401).json({ message: 'Téléphone ou mot de passe incorrect.' });
     }
 
     res.json({
       _id: user.id,
       nom: user.nom,
       prenom: user.prenom,
+      telephone: user.telephone,
       email: user.email,
       role: user.role,
       token: generateToken(user.id),
@@ -89,7 +84,6 @@ const login = async (req, res) => {
   }
 };
 
-// Profil utilisateur connecté
 const getMe = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
