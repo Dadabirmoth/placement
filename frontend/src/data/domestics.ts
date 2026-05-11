@@ -2,12 +2,12 @@ export interface Domestic {
   id: string;
   name: string;
   role: string;
-  category: string; // "cuisine", "enfants", "menage", etc.
+  category: string;
   location: string;
   rating: number;
   reviews: number;
   missions: number;
-  price: number; // FCFA par heure
+  price: number;
   verified: boolean;
   available: boolean;
   avatar: string;
@@ -27,7 +27,7 @@ export const domesticsData: Domestic[] = [
     price: 2500,
     verified: true,
     available: true,
-    avatar: "/avatars/marie.jpg",
+    avatar: "/images/domestic1.jpg.png",
     initials: "MK",
   },
   {
@@ -42,7 +42,7 @@ export const domesticsData: Domestic[] = [
     price: 3000,
     verified: true,
     available: false,
-    avatar: "/avatars/jeanpaul.jpg",
+    avatar: "/images/domestic2.jpg.png",
     initials: "JK",
   },
   {
@@ -57,7 +57,7 @@ export const domesticsData: Domestic[] = [
     price: 2000,
     verified: true,
     available: true,
-    avatar: "/avatars/awa.jpg",
+    avatar: "/images/domestic3.jpg.png",
     initials: "AB",
   },
   {
@@ -72,7 +72,7 @@ export const domesticsData: Domestic[] = [
     price: 4000,
     verified: true,
     available: true,
-    avatar: "/avatars/marc.jpg",
+    avatar: "/images/domestic4.jpg.png",
     initials: "MK",
   },
   {
@@ -87,7 +87,7 @@ export const domesticsData: Domestic[] = [
     price: 1800,
     verified: true,
     available: false,
-    avatar: "/avatars/grace.jpg",
+    avatar: "/images/domestic5.jpg.png",
     initials: "GN",
   },
   {
@@ -102,7 +102,7 @@ export const domesticsData: Domestic[] = [
     price: 3500,
     verified: true,
     available: true,
-    avatar: "/avatars/koffi.jpg",
+    avatar: "/images/domestic6.jpg.png",
     initials: "KB",
   },
   {
@@ -117,7 +117,7 @@ export const domesticsData: Domestic[] = [
     price: 2200,
     verified: true,
     available: true,
-    avatar: "/avatars/fatou.jpg",
+    avatar: "/images/domestic1.jpg.png",
     initials: "FD",
   },
   {
@@ -132,7 +132,7 @@ export const domesticsData: Domestic[] = [
     price: 3000,
     verified: true,
     available: true,
-    avatar: "/avatars/jeanmarc.jpg",
+    avatar: "/images/domestic2.jpg.png",
     initials: "JT",
   },
 ];

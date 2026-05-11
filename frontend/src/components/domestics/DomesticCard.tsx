@@ -15,7 +15,11 @@ export function DomesticCard({ domestic }: DomesticCardProps) {
         className="group relative h-64 overflow-hidden rounded-2xl border-primary/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
         style={
           domestic.avatar
-            ? { backgroundImage: `url(${domestic.avatar})` }
+            ? {
+                backgroundImage: `url(${domestic.avatar})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center top',
+              }
             : undefined
         }
       >

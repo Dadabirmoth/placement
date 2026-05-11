@@ -12,7 +12,18 @@ import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background py-20 lg:py-28">
+    <section className="relative overflow-hidden py-20 lg:py-28">
+      {/* Image de fond */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/images/hero-bg.jpg.png"
+          alt=""
+          className="w-full h-full object-cover object-top"
+        />
+        {/* Overlay pour lisibilité */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-primary/10 to-background/80" />
+      </div>
+
       {/* Cercles décoratifs */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
@@ -31,7 +42,7 @@ export function HeroSection() {
 
           <p className="text-lg text-muted-foreground max-w-xl mx-auto animate-fade-in delay-200">
             Sérénité connecte les foyers ivoiriens avec des professionnels de
-            maison qualifiés et vérifiés. Pour votre tranquillité d’esprit.
+            maison qualifiés et vérifiés. Pour votre tranquillité d&apos;esprit.
           </p>
 
           {/* Filtres */}

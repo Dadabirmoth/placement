@@ -15,7 +15,7 @@ const featuredProfiles: Domestic[] = [
     price: 2500,
     verified: true,
     available: true,
-    avatar: "/avatars/marie.jpg",
+    avatar: "/images/domestic1.jpg.png",
     initials: "MK",
   },
   {
@@ -30,7 +30,7 @@ const featuredProfiles: Domestic[] = [
     price: 3000,
     verified: true,
     available: false,
-    avatar: "/avatars/jeanpaul.jpg",
+    avatar: "/images/domestic2.jpg.png",
     initials: "JK",
   },
   {
@@ -45,7 +45,7 @@ const featuredProfiles: Domestic[] = [
     price: 2000,
     verified: true,
     available: true,
-    avatar: "/avatars/awa.jpg",
+    avatar: "/images/domestic3.jpg.png",
     initials: "AB",
   },
   {
@@ -60,7 +60,7 @@ const featuredProfiles: Domestic[] = [
     price: 4000,
     verified: true,
     available: true,
-    avatar: "/avatars/marc.jpg",
+    avatar: "/images/domestic4.jpg.png",
     initials: "MK",
   },
 ];

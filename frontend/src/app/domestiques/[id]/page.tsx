@@ -1,13 +1,10 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import api from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ReviewCard } from "@/components/domestics/ReviewCard";
 import {
   ShieldCheck,
   MapPin,
@@ -16,71 +13,58 @@ import {
   Clock,
   Circle,
   Mail,
-  Phone,
-  Loader2,
 } from "lucide-react";
+import { domesticsData } from "@/data/domestics";
 import Link from "next/link";
 
 export default function ProfilePage() {
   const params = useParams();
   const id = params.id as string;
-  const [profileData, setProfileData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const profile = domesticsData.find((d) => d.id === id);
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const res = await api.get(`/api/profiles/${id}`);
-        setProfileData(res.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (id) fetch();
-  }, [id]);
-
-  // Spinner de chargement
-  if (loading) {
-    return (
-      <div className="flex justify-center mt-20">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (!profileData) {
+  if (!profile) {
     return <p className="text-center mt-20">Profil introuvable</p>;
   }
 
-  const { ...profile } = profileData;
-  const user = profile.User;
-  const totalReviews = profile.totalReviews || 0;
-  const averageRating = profile.averageRating || 0;
+  const user = {
+    nom: profile.name.split(" ")[0],
+    prenom: profile.name.split(" ").slice(1).join(" "),
+  };
+  const totalReviews = profile.reviews;
+  const averageRating = profile.rating;
+  const adresse = profile.location;
+  const numeroCNI = "N/A";
+  const photoUrl = "/images/domestic-profil.jpg.png"; // photo circulaire
 
   return (
     <div className="container mx-auto px-4 py-10 space-y-10 animate-fade-in">
       {/* fil d'ariane */}
       <div className="text-sm text-muted-foreground flex gap-1">
-        <Link href="/" className="hover:text-primary">Accueil</Link><span>/</span>
-        <Link href="/domestiques" className="hover:text-primary">Domestiques</Link><span>/</span>
-        <span className="text-foreground">{user.nom} {user.prenom}</span>
+        <Link href="/" className="hover:text-primary">
+          Accueil
+        </Link>
+        <span>/</span>
+        <Link href="/domestiques" className="hover:text-primary">
+          Domestiques
+        </Link>
+        <span>/</span>
+        <span className="text-foreground">{profile.name}</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Colonne gauche : photo et badge */}
+        {/* Colonne gauche : photo circulaire */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="relative">
-            <div className="w-full aspect-square rounded-2xl border-4 border-primary/20 shadow-lg overflow-hidden bg-muted">
+          <div className="relative flex justify-center">
+            <div className="w-48 h-48 rounded-full border-4 border-primary/20 shadow-lg overflow-hidden bg-muted">
               <img
-                src={profile.photo || "/placeholder.jpg"}
-                alt={`${user.nom} ${user.prenom}`}
-                className="w-full h-full object-cover"
+                src={photoUrl}
+                alt={`${profile.name}`}
+                className="w-full h-full object-cover object-center"
               />
             </div>
-            <Badge className="absolute top-4 right-4 flex items-center gap-1 text-sm">
-              <Circle className="h-2 w-2 fill-current text-green-500" /> Disponible
+            <Badge className="absolute top-0 right-0 flex items-center gap-1 text-sm">
+              <Circle className="h-2 w-2 fill-current text-green-500" />{" "}
+              Disponible
             </Badge>
           </div>
           <Card className="bg-primary/5 border-primary/20">
@@ -88,7 +72,9 @@ export default function ProfilePage() {
               <ShieldCheck className="h-8 w-8 text-primary" />
               <div>
                 <p className="font-semibold text-sm">Badge de Confiance Or</p>
-                <p className="text-xs text-muted-foreground">Identité vérifiée, casier judiciaire OK.</p>
+                <p className="text-xs text-muted-foreground">
+                  Identité vérifiée, casier judiciaire OK.
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -98,14 +84,14 @@ export default function ProfilePage() {
         <div className="lg:col-span-2 space-y-8">
           <div>
             <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
-              {user.nom} {user.prenom}
+              {profile.name}
             </h1>
-            <p className="text-lg text-primary font-medium mt-1">
-              {profile.adresse}
-            </p>
+            <p className="text-lg text-primary font-medium mt-1">{adresse}</p>
             <div className="flex items-center gap-1 text-amber-500 mt-2">
               <Star className="h-5 w-5 fill-current" />
-              <span className="font-bold text-foreground">{averageRating}</span>
+              <span className="font-bold text-foreground">
+                {averageRating}
+              </span>
               <span className="text-muted-foreground text-sm ml-2">
                 ({totalReviews} avis)
               </span>
@@ -113,10 +99,10 @@ export default function ProfilePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatItem icon={<MapPin />} label="Localisation" value={profile.adresse} />
+            <StatItem icon={<MapPin />} label="Localisation" value={adresse} />
             <StatItem icon={<Briefcase />} label="Expérience" value="-" />
             <StatItem icon={<Clock />} label="Âge" value="-" />
-            <StatItem icon={<ShieldCheck />} label="CNI" value={profile.numeroCNI} />
+            <StatItem icon={<ShieldCheck />} label="CNI" value={numeroCNI} />
           </div>
 
           <Separator />
@@ -145,9 +131,13 @@ export default function ProfilePage() {
           </div>
 
           <section>
-            <h2 className="text-xl font-semibold mb-4">Avis ({totalReviews})</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Avis ({totalReviews})
+            </h2>
             {totalReviews === 0 ? (
-              <p className="text-muted-foreground">Aucun avis pour le moment.</p>
+              <p className="text-muted-foreground">
+                Aucun avis pour le moment.
+              </p>
             ) : (
               <div className="space-y-4">
                 {/* Les avis réels seront intégrés plus tard */}
