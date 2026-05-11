@@ -40,10 +40,16 @@ export function WhySection() {
           {reasons.map((reason, idx) => (
             <div
               key={idx}
-              className="group bg-card border rounded-2xl p-6 text-center hover:shadow-lg hover:border-primary/30 transition-all duration-300 animate-fade-in"
+              className="group bg-card border rounded-2xl p-6 text-center 
+                         hover:shadow-lg hover:border-primary/30 
+                         active:scale-95 active:shadow-md
+                         transition-all duration-300 animate-fade-in"
               style={{ animationDelay: `${idx * 100}ms` }}
             >
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-4 
+                              group-hover:bg-primary group-hover:text-primary-foreground 
+                              group-active:scale-90
+                              transition-colors">
                 <reason.icon className="h-6 w-6" />
               </div>
               <h3 className="font-semibold text-lg mb-2">{reason.title}</h3>

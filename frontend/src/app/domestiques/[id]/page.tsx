@@ -34,17 +34,17 @@ export default function ProfilePage() {
   const averageRating = profile.rating;
   const adresse = profile.location;
   const numeroCNI = "N/A";
-  const photoUrl = "/images/domestic-profil.jpg.png"; // photo circulaire
+  const photoUrl = "/images/domestic-profil.jpg.png";
 
   return (
     <div className="container mx-auto px-4 py-10 space-y-10 animate-fade-in">
       {/* fil d'ariane */}
       <div className="text-sm text-muted-foreground flex gap-1">
-        <Link href="/" className="hover:text-primary">
+        <Link href="/" className="hover:text-primary active:underline">
           Accueil
         </Link>
         <span>/</span>
-        <Link href="/domestiques" className="hover:text-primary">
+        <Link href="/domestiques" className="hover:text-primary active:underline">
           Domestiques
         </Link>
         <span>/</span>
@@ -55,19 +55,20 @@ export default function ProfilePage() {
         {/* Colonne gauche : photo circulaire */}
         <div className="lg:col-span-1 space-y-6">
           <div className="relative flex justify-center">
-            <div className="w-48 h-48 rounded-full border-4 border-primary/20 shadow-lg overflow-hidden bg-muted">
+            <div className="w-48 h-48 rounded-full border-4 border-primary/20 shadow-lg overflow-hidden bg-muted
+                            active:scale-105 active:border-primary/40 transition-all duration-200">
               <img
                 src={photoUrl}
                 alt={`${profile.name}`}
                 className="w-full h-full object-cover object-center"
               />
             </div>
-            <Badge className="absolute top-0 right-0 flex items-center gap-1 text-sm">
+            <Badge className="absolute top-0 right-0 flex items-center gap-1 text-sm active:scale-90 transition-transform">
               <Circle className="h-2 w-2 fill-current text-green-500" />{" "}
               Disponible
             </Badge>
           </div>
-          <Card className="bg-primary/5 border-primary/20">
+          <Card className="bg-primary/5 border-primary/20 active:scale-[0.98] transition-transform">
             <CardContent className="p-4 flex items-center gap-3">
               <ShieldCheck className="h-8 w-8 text-primary" />
               <div>
@@ -114,7 +115,7 @@ export default function ProfilePage() {
           <section>
             <h2 className="text-xl font-semibold mb-3">Compétences</h2>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary" className="px-3 py-1">
+              <Badge variant="secondary" className="px-3 py-1 active:scale-95 transition-transform">
                 Non spécifié
               </Badge>
             </div>
@@ -122,10 +123,10 @@ export default function ProfilePage() {
 
           <Separator />
           <div className="flex flex-wrap gap-4">
-            <Button size="lg" className="gap-2">
+            <Button size="lg" className="gap-2 active:scale-95 transition-transform">
               <Briefcase className="h-4 w-4" /> Embaucher
             </Button>
-            <Button variant="outline" size="lg" className="gap-2">
+            <Button variant="outline" size="lg" className="gap-2 active:scale-95 transition-transform">
               <Mail className="h-4 w-4" /> Contacter
             </Button>
           </div>
@@ -160,7 +161,8 @@ function StatItem({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50">
+    <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 
+                    active:scale-95 active:bg-muted/80 transition-all duration-200">
       <div className="text-primary">{icon}</div>
       <div>
         <p className="text-xs text-muted-foreground">{label}</p>

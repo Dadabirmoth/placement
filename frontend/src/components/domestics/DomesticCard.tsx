@@ -10,9 +10,12 @@ interface DomesticCardProps {
 
 export function DomesticCard({ domestic }: DomesticCardProps) {
   return (
-    <Link href={`/domestiques/${domestic.id}`}>
+    <Link href={`/domestiques/${domestic.id}`} className="block">
       <Card
-        className="group relative h-64 overflow-hidden rounded-2xl border-primary/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+        className="group relative h-64 overflow-hidden rounded-2xl border-primary/10 
+                   hover:shadow-xl hover:-translate-y-1 
+                   active:scale-[0.97] active:shadow-lg
+                   transition-all duration-300"
         style={
           domestic.avatar
             ? {
