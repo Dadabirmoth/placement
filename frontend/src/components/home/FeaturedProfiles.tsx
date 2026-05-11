@@ -60,7 +60,7 @@ const featuredProfiles: Domestic[] = [
     price: 4000,
     verified: true,
     available: true,
-    avatar: "/images/domestic5.jpg.png",
+    avatar: "/images/domestic4.jpg.png",
     initials: "MK",
   },
 ];
