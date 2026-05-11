@@ -25,7 +25,6 @@ export default function DomestiquesPage() {
   const filtered = useMemo(() => {
     let list = domesticsData;
 
-    // Filtre par recherche (nom, rôle, localisation)
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(
@@ -36,12 +35,10 @@ export default function DomestiquesPage() {
       );
     }
 
-    // Filtre par catégorie
     if (category !== "tous") {
       list = list.filter((d) => d.category === category);
     }
 
-    // Tri
     if (sort === "rating") {
       list = [...list].sort((a, b) => b.rating - a.rating);
     } else if (sort === "price-asc") {
@@ -61,7 +58,6 @@ export default function DomestiquesPage() {
 
   return (
     <div className="container mx-auto px-4 py-10 space-y-8">
-      {/* Titre */}
       <div className="text-center">
         <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground">
           Nos <span className="text-primary">Domestiques</span>
@@ -71,7 +67,6 @@ export default function DomestiquesPage() {
         </p>
       </div>
 
-      {/* Filtres */}
       <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center bg-card/80 backdrop-blur p-2 rounded-2xl border shadow-sm">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -85,7 +80,13 @@ export default function DomestiquesPage() {
             className="pl-9 border-0 bg-transparent focus-visible:ring-0"
           />
         </div>
-        <Select value={category} onValueChange={(v) => { setCategory(v); setCurrentPage(1); }}>
+        <Select
+          value={category}
+          onValueChange={(v) => {
+            setCategory(v ?? "tous");
+            setCurrentPage(1);
+          }}
+        >
           <SelectTrigger className="w-full sm:w-[180px]">
             <SlidersHorizontal className="h-4 w-4 mr-2" />
             <SelectValue placeholder="Catégorie" />
@@ -98,7 +99,13 @@ export default function DomestiquesPage() {
             <SelectItem value="chauffeur">Chauffeur</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={sort} onValueChange={(v) => { setSort(v); setCurrentPage(1); }}>
+        <Select
+          value={sort}
+          onValueChange={(v) => {
+            setSort(v ?? "rating");
+            setCurrentPage(1);
+          }}
+        >
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Trier par" />
           </SelectTrigger>
@@ -110,7 +117,6 @@ export default function DomestiquesPage() {
         </Select>
       </div>
 
-      {/* Grille */}
       {filtered.length === 0 ? (
         <div className="text-center py-20 text-muted-foreground">
           Aucun domestique trouvé.
@@ -123,7 +129,6 @@ export default function DomestiquesPage() {
             ))}
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-center gap-4 items-center pt-4">
               <Button
