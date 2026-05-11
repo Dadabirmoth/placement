@@ -30,14 +30,14 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <MainLayout>{children}</MainLayout>
-        </ThemeProvider>
+      <ThemeProvider
+  attribute="class"
+  defaultTheme="dark"
+  enableSystem={false}
+  disableTransitionOnChange
+>
+  <MainLayout>{children}</MainLayout>
+</ThemeProvider>
       </body>
     </html>
   );

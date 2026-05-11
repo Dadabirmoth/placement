@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, ShieldCheck, User } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { ModeToggle } from "@/components/mode-toggle";
 import { MobileMenu } from "./MobileMenu";
 import { useState } from "react";
 
@@ -20,7 +19,6 @@ export function Header() {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // État d'authentification initialisé directement (pas d'effet)
   const [auth, setAuth] = useState(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
@@ -29,9 +27,7 @@ export function Header() {
         try {
           const user = JSON.parse(userStr);
           return { isLoggedIn: true, userRole: user.role };
-        } catch {
-          // JSON invalide, on ignore
-        }
+        } catch {}
       }
     }
     return { isLoggedIn: false, userRole: null };
@@ -47,7 +43,6 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60 shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <ShieldCheck className="h-7 w-7 text-primary transition-transform group-hover:scale-110" />
           <span className="font-serif text-2xl font-bold text-primary tracking-tight">
@@ -55,7 +50,6 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Navigation desktop */}
         <nav className="hidden md:flex items-center gap-8">
           {navigation.map((item) => (
             <Link
@@ -75,9 +69,7 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Actions desktop */}
         <div className="hidden md:flex items-center gap-3">
-          <ModeToggle />
           {auth.isLoggedIn ? (
             <>
               <Link
@@ -113,9 +105,7 @@ export function Header() {
           )}
         </div>
 
-        {/* Mobile */}
         <div className="flex items-center gap-2 md:hidden">
-          <ModeToggle />
           <Button
             variant="ghost"
             size="icon"
